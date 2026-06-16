@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  # Microservicio
+  mlb-service:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://db:27017/mlb_db
+    depends_on:
+      - db
+
+  # Contenedor de mongo-db
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
