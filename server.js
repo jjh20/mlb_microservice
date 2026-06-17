@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = 3000;
 
-
 app.use(express.json());
 
 // Conexión a MongoDB
@@ -23,30 +22,36 @@ const TeamSchema = new mongoose.Schema({
 
 const Team = mongoose.model('Team', TeamSchema);
 
-
 // RUTAS DEL CRUD
 // ==========================================
 
 // 1. OBTENER TODOS LOS EQUIPOS
+app.get('/api/equipos', async (req, res) => {
+    try {
+        const teams = await Team.find();
+        res.json({ status: "success", data: teams });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
+
 // 1.2 OBTENER UN EQUIPO ESPECÍFICO POR ID
 app.get('/api/equipos/:id', async (req, res) => {
     try {
-        const { id } = req.params; // Captura el ID que viene en la URL de Postman
-        const team = await Team.findById(id); // Lo busca directamente en MongoDB
+        const { id } = req.params;
+        const team = await Team.findById(id);
 
-        // Si el formato del ID es válido pero no existe en la base de datos
         if (!team) {
             return res.status(404).json({ status: "error", message: "Equipo no encontrado en la base de datos" });
         }
 
         res.json({ status: "success", data: team });
     } catch (error) {
-        // Si el ID está mal escrito o tiene menos caracteres de los que pide Mongo
         res.status(400).json({ status: "error", message: "ID inválido: " + error.message });
     }
 });
 
-// 2. CREAR UN NUEVO EQUIPO (Modificado para ver el detalle real del error 400)
+// 2. CREAR UN NUEVO EQUIPO
 app.post('/api/equipos', async (req, res) => {
     try {
         const { nombre, liga, division } = req.body;
@@ -54,7 +59,6 @@ app.post('/api/equipos', async (req, res) => {
         await newTeam.save();
         res.status(201).json({ status: "success", data: newTeam });
     } catch (error) {
-        // Devolvemos el error_detalle exacto para saber qué falló en Mongoose o la BD
         res.status(400).json({ status: "error", error_detalle: error.message });
     }
 });
@@ -101,4 +105,3 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Microservicio de la MLB corriendo en http://localhost:${PORT}`);
 });
-
