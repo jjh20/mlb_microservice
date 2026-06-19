@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlb-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlb
+  template:
+    metadata:
+      labels:
+        app: mlb
+    spec:
+      containers:
+      - name: mlb-container
+        image: nginx:latest # Cambia esto por la imagen de tu microservicio cuando la tengas
+        ports:
+        - containerPort: 80
