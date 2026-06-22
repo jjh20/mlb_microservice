@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mlb-service
-  namespace: default  # <--- ¡Añade esta línea aquí!
+  namespace: default
 spec:
   replicas: 1
   selector:
