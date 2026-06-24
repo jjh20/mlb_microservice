@@ -42,7 +42,7 @@ app.get('/api/equipos/:id', async (req, res) => {
         const team = await Team.findById(id);
 
         if (!team) {
-            return res.status(404).json({ status: "error", message: "Equipo no encontrado en la base de datos" });
+            return res.status(404).json({ status: "error", message: "Equipo no encontrado en the data base" });
         }
 
         res.json({ status: "success", data: team });
